@@ -21,10 +21,55 @@ definitions:
       message:
         type: string
     type: object
+  handler.DeleteOpeningResponse:
+    properties:
+      data:
+        $ref: '#/definitions/schemas.OpeningResponse'
+      message:
+        type: string
+    type: object
   handler.ErrorResponse:
     properties:
       errorCode:
         type: integer
+      message:
+        type: string
+    type: object
+  handler.ListOpeningsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/schemas.OpeningResponse'
+        type: array
+      message:
+        type: string
+    type: object
+  handler.ShowOpeningResponse:
+    properties:
+      data:
+        $ref: '#/definitions/schemas.OpeningResponse'
+      message:
+        type: string
+    type: object
+  handler.UpdateOpeningRequest:
+    properties:
+      company:
+        type: string
+      link:
+        type: string
+      location:
+        type: string
+      remote:
+        type: boolean
+      role:
+        type: string
+      salary:
+        type: integer
+    type: object
+  handler.UpdateOpeningResponse:
+    properties:
+      data:
+        $ref: '#/definitions/schemas.OpeningResponse'
       message:
         type: string
     type: object
@@ -56,6 +101,66 @@ info:
   contact: {}
 paths:
   /opening:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an opening
+      parameters:
+      - description: ID of the opening to delete
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.DeleteOpeningResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Delete an opening
+      tags:
+      - openings
+    get:
+      consumes:
+      - application/json
+      description: Show an opening
+      parameters:
+      - description: ID of the opening to show
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ShowOpeningResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Show an opening
+      tags:
+      - openings
     post:
       consumes:
       - application/json
@@ -83,6 +188,63 @@ paths:
           schema:
             $ref: '#/definitions/handler.ErrorResponse'
       summary: Create an opening
+      tags:
+      - openings
+    put:
+      consumes:
+      - application/json
+      description: Update an opening
+      parameters:
+      - description: ID of the opening to update
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: Request body to update an opening
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateOpeningRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.UpdateOpeningResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Update an opening
+      tags:
+      - openings
+  /openings:
+    get:
+      consumes:
+      - application/json
+      description: List openings
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ListOpeningsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: List openings
       tags:
       - openings
 swagger: "2.0"
